@@ -1,9 +1,9 @@
 #include "shell.h"
 
 /**
- * get_environ - returns the string array copy of our environ
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
+ * get_environ - returns the copy of
+ * the system environ
+ * @info: params from the info struct
  * Return: Always 0
  */
 char **get_environ(info_t *info)
@@ -19,23 +19,22 @@ char **get_environ(info_t *info)
 
 /**
  * _unsetenv - Remove an environment variable
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
+ * @info: params from the info struct
  *  Return: 1 on delete, 0 otherwise
- * @var: the string env var property
+ * @var_props: the string env variable property
  */
-int _unsetenv(info_t *info, char *var)
+int _unsetenv(info_t *info, char *var_props)
 {
     list_t *node = info->env;
     size_t i = 0;
     char *p;
 
-    if (!node || !var)
+    if (!node || !var_props)
         return (0);
 
     while (node)
     {
-        p = starts_with(node->str, var);
+        p = starts_with(node->str, var_props);
         if (p && *p == '=')
         {
             info->env_changed = delete_node_at_index(&(info->env), i);
@@ -50,12 +49,11 @@ int _unsetenv(info_t *info, char *var)
 }
 
 /**
- * _setenv - Initialize a new environment variable,
- *             or modify an existing one
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- * @var: the string env var property
- * @value: the string env var value
+ * _setenv - Initialize a new environment variable
+ * or modify an existing one
+ * @info: params from the info struct
+ * @var: the string env variable property
+ * @value: the value of the env variable prop
  *  Return: Always 0
  */
 int _setenv(info_t *info, char *var, char *value)

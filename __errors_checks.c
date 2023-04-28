@@ -2,23 +2,24 @@
 
 /**
  * _erratoi - converts a string to an integer
- * @s: the string to be converted
- * Return: 0 if no numbers in string, converted number otherwise
- *       -1 on error
+ * @str: the string to be converted
+ * Return: 0 if no numbers is in given string
+ * else, converted number is returned
+ * otherwise -1 on error
  */
-int _erratoi(char *s)
+int _erratoi(char *str)
 {
     int i = 0;
     unsigned long int result = 0;
 
-    if (*s == '+')
-        s++; /* TODO: why does this make main return 255? */
-    for (i = 0; s[i] != '\0'; i++)
+    if (*str == '+')
+        str++;
+    for (i = 0; str[i] != '\0'; i++)
     {
-        if (s[i] >= '0' && s[i] <= '9')
+        if (str[i] >= '0' && str[i] <= '9')
         {
             result *= 10;
-            result += (s[i] - '0');
+            result += (str[i] - '0');
             if (result > INT_MAX)
                 return (-1);
         }
@@ -29,50 +30,48 @@ int _erratoi(char *s)
 }
 
 /**
- * print_error - prints an error message
- * @info: the parameter & return info struct
- * @estr: string containing specified error type
- * Return: 0 if no numbers in string, converted number otherwise
- *        -1 on error
+ * __p_error - prints an error message
+ * @info: the params from info struct
+ * @error_str: string containing specified error type
+ * Return: void function
  */
-void print_error(info_t *info, char *estr)
+void __p_error(info_t *info, char *error_str)
 {
-    _eputs(info->fname);
-    _eputs(": ");
+    __error_puts(info->file_name);
+    __error_puts(": ");
     print_d(info->line_count, STDERR_FILENO);
-    _eputs(": ");
-    _eputs(info->argv[0]);
-    _eputs(": ");
-    _eputs(estr);
+    __error_puts(": ");
+    __error_puts(info->argv[0]);
+    __error_puts(": ");
+    __error_puts(error_str);
 }
 
 /**
  * print_d - function prints a decimal (integer) number (base 10)
  * @input: the input
- * @fd: the filedescriptor to write to
- *
- * Return: number of characters printed
+ * @file_desc: the file descriptor to write to
+ * Return: number of characters
  */
-int print_d(int input, int fd)
+int print_d(int input, int file_desc)
 {
     int (*__putchar)(char) = _putchar;
     int i, count = 0;
-    unsigned int _abs_, current;
+    unsigned int _absolute_, current;
 
-    if (fd == STDERR_FILENO)
-        __putchar = _eputchar;
+    if (file_desc == STDERR_FILENO)
+        __putchar = __error_putchar;
     if (input < 0)
     {
-        _abs_ = -input;
+        _absolute_ = -input;
         __putchar('-');
         count++;
     }
     else
-        _abs_ = input;
-    current = _abs_;
+        _absolute_ = input;
+    current = _absolute_;
     for (i = 1000000000; i > 1; i /= 10)
     {
-        if (_abs_ / i)
+        if (_absolute_ / i)
         {
             __putchar('0' + current / i);
             count++;
@@ -86,16 +85,16 @@ int print_d(int input, int fd)
 }
 
 /**
- * convert_number - converter function, a clone of itoa
+ * convert_number - converter function, a mock of C itoa
  * @num: number
  * @base: base
- * @flags: argument flags
+ * @flags: argument flags recieved
  *
  * Return: string
  */
 char *convert_number(long int num, int base, int flags)
 {
-    static char *array;
+    static char *char_array;
     static char buffer[50];
     char sign = 0;
     char *ptr;
@@ -106,13 +105,13 @@ char *convert_number(long int num, int base, int flags)
         n = -num;
         sign = '-';
     }
-    array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+    char_array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
     ptr = &buffer[49];
     *ptr = '\0';
 
     do
     {
-        *--ptr = array[n % base];
+        *--ptr = char_array[n % base];
         n /= base;
     } while (n != 0);
 
@@ -122,9 +121,9 @@ char *convert_number(long int num, int base, int flags)
 }
 
 /**
- * remove_comments - function replaces first instance of '#' with '\0'
+ * remove_comments - function replaces
+ * first instance of '#' with '\0'
  * @buf: address of the string to modify
- *
  * Return: Always 0;
  */
 void remove_comments(char *buf)

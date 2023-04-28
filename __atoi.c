@@ -1,23 +1,23 @@
 #include "shell.h"
 
 /**
- * interactive - returns true if shell is interactive mode
- * @info: struct address
- *
- * Return: 1 if interactive mode, 0 otherwise
+ * __is_interactive - returns true
+ * if shell is in __is_interactive mode
+ * @info: info params from info struct
+ * Return: 1 if __is_interactive mode, 0 otherwise
  */
-int interactive(info_t *info)
+int __is_interactive(info_t *info)
 {
-    return (isatty(STDIN_FILENO) && info->readfd <= 2);
+    return (isatty(STDIN_FILENO) && info->read_file_dir <= 2);
 }
 
 /**
- * is_delim - checks if character is a delimeter
+ * __is_delim - checks if character is a delimeter
  * @c: the char to check
  * @delim: the delimeter string
  * Return: 1 if true, 0 if false
  */
-int is_delim(char c, char *delim)
+int __is_delim(char c, char *delim)
 {
     while (*delim)
         if (*delim++ == c)

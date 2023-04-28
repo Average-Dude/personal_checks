@@ -1,47 +1,44 @@
 #include "shell.h"
 
 /**
- * _myhistory - displays the history list, one command by line, preceded
- *              with line numbers, starting at 0.
- * @info: Structure containing potential arguments. Used to maintain
- *        constant function prototype.
- *  Return: Always 0
+ * __history - displays the history list
+ * @info: info params from info struct
+ *  Return: 0 on success
  */
-int _myhistory(info_t *info)
+int __history(info_t *info)
 {
     print_list(info->history);
     return (0);
 }
 
 /**
- * unset_alias - sets alias to string
- * @info: parameter struct
+ * unset_alias - un-sets alias to string
+ * @info: params from info struct
  * @str: the string alias
- *
- * Return: Always 0 on success, 1 on error
+ * Return: Always 0 on success
+ * 1 on error
  */
 int unset_alias(info_t *info, char *str)
 {
     char *p, c;
-    int ret;
+    int return_val;
 
     p = _strchr(str, '=');
     if (!p)
         return (1);
     c = *p;
     *p = 0;
-    ret = delete_node_at_index(&(info->alias),
-                               get_node_index(info->alias, node_starts_with(info->alias, str, -1)));
+    return_val = delete_node_at_index(&(info->alias), get_node_at_index(info->alias, node_starts_with(info->alias, str, -1)));
     *p = c;
-    return (ret);
+    return (return_val);
 }
 
 /**
  * set_alias - sets alias to string
  * @info: parameter struct
  * @str: the string alias
- *
- * Return: Always 0 on success, 1 on error
+ * Return: Always 0 on success
+ * 1 on error
  */
 int set_alias(info_t *info, char *str)
 {
@@ -59,18 +56,18 @@ int set_alias(info_t *info, char *str)
 
 /**
  * print_alias - prints an alias string
- * @node: the alias node
- *
- * Return: Always 0 on success, 1 on error
+ * @alias_node: the alias node
+ * Return: Always 0 on success
+ * 1 on error
  */
-int print_alias(list_t *node)
+int print_alias(list_t *alias_node)
 {
     char *p = NULL, *a = NULL;
 
-    if (node)
+    if (alias_node)
     {
-        p = _strchr(node->str, '=');
-        for (a = node->str; a <= p; a++)
+        p = _strchr(alias_node->str, '=');
+        for (a = alias_node->str; a <= p; a++)
             _putchar(*a);
         _putchar('\'');
         _puts(p + 1);
@@ -81,12 +78,11 @@ int print_alias(list_t *node)
 }
 
 /**
- * _myalias - mimics the alias builtin (man alias)
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
+ * __alias - mimics the alias builtin (man alias)
+ * @info: info params from info struct
  *  Return: Always 0
  */
-int _myalias(info_t *info)
+int __alias(info_t *info)
 {
     int i = 0;
     char *p = NULL;

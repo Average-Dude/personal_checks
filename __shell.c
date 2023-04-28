@@ -9,7 +9,7 @@
  */
 int main(int ac, char **av)
 {
-    info_t info[] = {INFO_INIT};
+    info_t info[] = {INITIALIZE_INFO};
     int fd = 2;
 
     asm("mov %1, %0\n\t"
@@ -26,19 +26,19 @@ int main(int ac, char **av)
                 exit(126);
             if (errno == ENOENT)
             {
-                _eputs(av[0]);
-                _eputs(": 0: Can't open ");
-                _eputs(av[1]);
-                _eputchar('\n');
-                _eputchar(BUF_FLUSH);
+                __error_puts(av[0]);
+                __error_puts(": 0: Can't open ");
+                __error_puts(av[1]);
+                __error_putchar('\n');
+                __error_putchar(BUFFER_FLUSH);
                 exit(127);
             }
             return (EXIT_FAILURE);
         }
-        info->readfd = fd;
+        info->read_file_dir = fd;
     }
     populate_env_list(info);
-    read_history(info);
-    hsh(info, av);
+    __read_history(info);
+    __h_shell(info, av);
     return (EXIT_SUCCESS);
 }

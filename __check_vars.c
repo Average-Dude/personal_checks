@@ -1,14 +1,15 @@
 #include "shell.h"
 
 /**
- * is_chain - test if current char in buffer is a chain delimeter
- * @info: the parameter struct
+ * __Is_chained - test if current char in buffer
+ * is a chain delimeter i.e '||', '&&', ';'
+ * @info: params from the info struct
  * @buf: the char buffer
  * @p: address of current position in buf
- *
- * Return: 1 if chain delimeter, 0 otherwise
+ * Return: 1 if chain delimeter
+ * 0 otherwise
  */
-int is_chain(info_t *info, char *buf, size_t *p)
+int __Is_chained(info_t *info, char *buf, size_t *p)
 {
     size_t j = *p;
 
@@ -16,18 +17,18 @@ int is_chain(info_t *info, char *buf, size_t *p)
     {
         buf[j] = 0;
         j++;
-        info->cmd_buf_type = CMD_OR;
+        info->cmd_buffer_type = CMD_OR;
     }
     else if (buf[j] == '&' && buf[j + 1] == '&')
     {
         buf[j] = 0;
         j++;
-        info->cmd_buf_type = CMD_AND;
+        info->cmd_buffer_type = CMD_AND;
     }
-    else if (buf[j] == ';') /* found end of this command */
+    else if (buf[j] == ';')
     {
-        buf[j] = 0; /* replace semicolon with null */
-        info->cmd_buf_type = CMD_CHAIN;
+        buf[j] = 0;
+        info->cmd_buffer_type = CMD_CHAIN;
     }
     else
         return (0);
@@ -36,33 +37,34 @@ int is_chain(info_t *info, char *buf, size_t *p)
 }
 
 /**
- * check_chain - checks we should continue chaining based on last status
+ * __chain_checks - checks for continuation
+ * of chaining based on last status of the info struct
  * @info: the parameter struct
- * @buf: the char buffer
- * @p: address of current position in buf
- * @i: starting position in buf
- * @len: length of buf
+ * @info: params from the info struct
+ * @p: address of current position in buffer
+ * @i: starting position in buffer
+ * @buff_length: length of buffer
  *
  * Return: Void
  */
-void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len)
+void __chain_checks(info_t *info, char *buf, size_t *p, size_t i, size_t buff_length)
 {
     size_t j = *p;
 
-    if (info->cmd_buf_type == CMD_AND)
+    if (info->cmd_buffer_type == CMD_AND)
     {
         if (info->status)
         {
             buf[i] = 0;
-            j = len;
+            j = buff_length;
         }
     }
-    if (info->cmd_buf_type == CMD_OR)
+    if (info->cmd_buffer_type == CMD_OR)
     {
         if (!info->status)
         {
             buf[i] = 0;
-            j = len;
+            j = buff_length;
         }
     }
 
@@ -70,10 +72,11 @@ void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len)
 }
 
 /**
- * replace_alias - replaces an aliases in the tokenized string
- * @info: the parameter struct
- *
- * Return: 1 if replaced, 0 otherwise
+ * replace_alias - replaces an aliases in a
+ * found tokenized string
+ * @info: params from the info struct
+ * Return: 1 if found and replaced
+ * 0 otherwise
  */
 int replace_alias(info_t *info)
 {
@@ -100,8 +103,7 @@ int replace_alias(info_t *info)
 
 /**
  * replace_vars - replaces vars in the tokenized string
- * @info: the parameter struct
- *
+ * @info: params from the info struct
  * Return: 1 if replaced, 0 otherwise
  */
 int replace_vars(info_t *info)
@@ -142,7 +144,6 @@ int replace_vars(info_t *info)
  * replace_string - replaces string
  * @old: address of old string
  * @new: new string
- *
  * Return: 1 if replaced, 0 otherwise
  */
 int replace_string(char **old, char *new)
