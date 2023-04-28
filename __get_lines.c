@@ -1,4 +1,5 @@
 #include "shell.h"
+#include "main.h"
 
 /**
  * input_buf - buffers chained commands
@@ -161,7 +162,7 @@ int _getline(info_t *info, char **ptr, size_t *length)
  */
 void __handle_signals(__attribute__((unused)) int sig_num)
 {
-    _puts("\n");
-    _puts("EDPE :) $ ");
+    _printf("\n");
+    _prinf("Konichiwa :)$ ");
     _putchar(BUFFER_FLUSH);
 }

@@ -17,7 +17,7 @@ int __h_shell(info_t *info, char **argv)
     {
         clear_info(info);
         if (__is_interactive(info))
-            _puts("$ ");
+            _puts("Konichiwa :)$ ");
         __error_putchar(BUFFER_FLUSH);
         r = get_input(info);
         if (r != -1)
